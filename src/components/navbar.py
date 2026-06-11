@@ -36,4 +36,3 @@ def create_navbar() -> dbc.NavbarSimple:
 if __name__ == "__main__":
     print("Navbar component created successfully")
 
-# Made with Bob

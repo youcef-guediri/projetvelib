@@ -263,5 +263,3 @@ if __name__ == "__main__":
     print(f"0 bikes: {categorize_availability(0)}")
     print(f"3 bikes: {categorize_availability(3)}")
     print(f"10 bikes: {categorize_availability(10)}")
-
-# Made with Bob

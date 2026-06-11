@@ -221,4 +221,3 @@ def create_about_layout() -> html.Div:
 if __name__ == "__main__":
     print("About page layout created successfully")
 
-# Made with Bob

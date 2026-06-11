@@ -543,4 +543,3 @@ def create_insights_layout(df: pd.DataFrame) -> html.Div:
 if __name__ == "__main__":
     print("Advanced insights page created successfully")
 
-# Made with Bob

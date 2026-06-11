@@ -200,4 +200,3 @@ def update_map(
 if __name__ == "__main__":
     print("Map page layout created successfully")
 
-# Made with Bob

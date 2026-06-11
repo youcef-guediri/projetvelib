@@ -57,4 +57,3 @@ def create_header() -> dbc.Container:
 if __name__ == "__main__":
     print("Header component created successfully")
 
-# Made with Bob

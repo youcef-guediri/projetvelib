@@ -471,4 +471,3 @@ def create_home_layout(df: pd.DataFrame) -> html.Div:
 if __name__ == "__main__":
     print("Professional home page layout created successfully")
 
-# Made with Bob

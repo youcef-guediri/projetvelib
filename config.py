@@ -25,7 +25,7 @@ STATION_STATUS_URL = f"{VELIB_API_BASE_URL}/station_status.json"
 # Dashboard configuration
 DASHBOARD_TITLE = "Vélib' Métropole - Analyse des Stations"
 DASHBOARD_HOST = "127.0.0.1"
-DASHBOARD_PORT = 8050
+DASHBOARD_PORT = 8060
 DEBUG_MODE = False  # Set to False for production
 
 # Database configuration
@@ -63,5 +63,3 @@ EMPTY_THRESHOLD = 0
 # CSV delimiters
 INFO_DELIMITER = ';'
 STATUS_DELIMITER = ','
-
-# Made with Bob

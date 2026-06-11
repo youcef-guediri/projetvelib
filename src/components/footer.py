@@ -82,4 +82,3 @@ def create_footer() -> dbc.Container:
 if __name__ == "__main__":
     print("Footer component created successfully")
 
-# Made with Bob

@@ -147,5 +147,3 @@ if __name__ == "__main__":
     print(info_df.head())
     print("\nFirst rows of Station Status:")
     print(status_df.head())
-
-# Made with Bob

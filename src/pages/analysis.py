@@ -135,8 +135,12 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
     df_filtered = df_filtered[df_filtered['num_bikes_available'] >= min_bikes]
 
     if bike_type == 'mechanical':
+    # Affiche SEULEMENT les mécaniques
+        df_filtered['num_bikes_available'] = df_filtered['mechanical_bikes']
         df_filtered = df_filtered[df_filtered['mechanical_bikes'] > 0]
     elif bike_type == 'ebike':
+    # Affiche SEULEMENT les électriques
+        df_filtered['num_bikes_available'] = df_filtered['ebikes']
         df_filtered = df_filtered[df_filtered['ebikes'] > 0]
 
     # Statistics
@@ -241,4 +245,3 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
 if __name__ == "__main__":
     print("Analysis page layout created successfully")
 
-# Made with Bob

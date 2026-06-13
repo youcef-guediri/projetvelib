@@ -135,15 +135,19 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
     df_filtered = df_filtered[df_filtered['num_bikes_available'] >= min_bikes]
 
     if bike_type == 'mechanical':
-    # Affiche SEULEMENT les mécaniques
+        # Affiche SEULEMENT les mécaniques
+        df_filtered = df_filtered.copy()
         df_filtered['num_bikes_available'] = df_filtered['mechanical_bikes']
+        df_filtered['ebikes'] = 0
         df_filtered = df_filtered[df_filtered['mechanical_bikes'] > 0]
     elif bike_type == 'ebike':
-    # Affiche SEULEMENT les électriques
+        # Affiche SEULEMENT les électriques
+        df_filtered = df_filtered.copy()
         df_filtered['num_bikes_available'] = df_filtered['ebikes']
+        df_filtered['mechanical_bikes'] = 0
         df_filtered = df_filtered[df_filtered['ebikes'] > 0]
 
-    # Statistics
+    # ===== STATISTICS =====
     stats_div = html.Div([
         dbc.Row([
             dbc.Col([
@@ -173,7 +177,7 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
         ])
     ])
 
-    # Scatter plot: Capacity vs Availability
+    # ===== SCATTER PLOT: Capacity vs Availability =====
     scatter_fig = px.scatter(
         df_filtered,
         x='capacity',
@@ -194,33 +198,37 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
         height=400
     )
 
-    # Bar chart: Bike type comparison
-    bike_comparison_data = pd.DataFrame({
-        'Type': ['Mécaniques', 'Électriques'],
-        'Nombre': [
-            int(df_filtered['mechanical_bikes'].sum()),
-            int(df_filtered['ebikes'].sum())
-        ]
-    })
-
-    comparison_fig = px.bar(
-        bike_comparison_data,
-        x='Type',
-        y='Nombre',
-        title='Comparaison des Types de Vélos',
-        color='Type',
-        color_discrete_map={
-            'Mécaniques': COLORS['mechanical'],
-            'Électriques': COLORS['ebike']
-        }
+    # ===== HISTOGRAM: Occupancy rate distribution (VRAI HISTOGRAM CONTINU) =====
+    comparison_fig = px.histogram(
+        df_filtered,
+        x='occupancy_rate',  # ← DONNÉES CONTINUES (0 à 100%)
+        nbins=20,
+        title='Distribution des Taux d\'Occupation',
+        labels={
+            'occupancy_rate': 'Taux d\'occupation (%)',
+            'count': 'Nombre de stations'
+        },
+        color_discrete_sequence=['#3B82F6']
     )
+
+    comparison_fig.update_traces(
+        marker=dict(line=dict(color='white', width=1)),
+        hovertemplate='Taux: %{x:.1f}%<br>Stations: %{y}<extra></extra>'
+    )
+
     comparison_fig.update_layout(
         title={'x': 0.5, 'xanchor': 'center'},
         showlegend=False,
-        height=400
+        height=400,
+        xaxis_title='Taux d\'occupation (%)',
+        yaxis_title='Nombre de stations',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(250,250,250,1)',
+        xaxis=dict(gridcolor='#F1F5F9'),
+        yaxis=dict(gridcolor='#F1F5F9')
     )
 
-    # Box plot: Occupancy distribution
+    # ===== BOX PLOT: Occupancy distribution =====
     distribution_fig = go.Figure()
     distribution_fig.add_trace(go.Box(
         y=df_filtered['occupancy_rate'],
@@ -244,4 +252,4 @@ def update_analysis(min_bikes: int, bike_type: str, data: list) -> tuple:
 
 if __name__ == "__main__":
     print("Analysis page layout created successfully")
-
+    

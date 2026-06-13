@@ -197,8 +197,8 @@ def create_about_layout() -> html.Div:
                     dbc.CardHeader(html.H4("Copyright", className="mb-0")),
                     dbc.CardBody([
                         html.P([
-                            "Je declare sur l'honneur que le code fourni a ete produit par moi-meme, ",
-                            "a l'exception des bibliotheques open source utilisees (Dash, Plotly, Pandas, etc.)."
+                            "Le code fourni a été produit par nous-même à l'aide de l'IA, ",
+                            "à l'exception des bibliotheques open source utilisees (Dash, Plotly, Pandas, etc.)."
                         ]),
                         html.P([
                             "Ce projet est developpe a des fins educatives dans le cadre d'un cours de ",

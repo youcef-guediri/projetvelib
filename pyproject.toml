@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "velib-dashboard"
 version = "1.0.0"
 description = "Dashboard interactif pour l'analyse des données Vélib' Métropole à Paris"
-readme = "README.md"
+# readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
@@ -39,10 +39,29 @@ packages = ["src"]
 testpaths = ["tests"]
 python_files = "test_*.py"
 
+# --- CONFIGURATION DE MYPY (MIS À JOUR) ---
 [tool.mypy]
 python_version = "3.11"
+# Le mode strict active toutes les vérifications demandées par vos consignes
+strict = true
+# Utile pour certaines bibliothèques tierces (comme dash ou plotly) qui n'ont pas de stubs de typage
 ignore_missing_imports = true
 
+# --- CONFIGURATION DE RUFF (MIS À JOUR) ---
 [tool.ruff]
-line-length = 100
+# Respect de la règle des 79 caractères max par ligne de votre guide
+line-length = 79
 target-version = "py311"
+
+[tool.ruff.lint]
+# Sélection des règles correspondant à vos critères de qualité :
+# E, W : Style et règles PEP 8 (Multi-lignes)
+# F : Erreurs logiques et variables inutiles (Variables inutiles)
+# D : Documentation et Docstrings obligatoires (Docstrings)
+# N : Règles de nommage explicites (Self explanatory code)
+# B : Prévention des bugs courants
+select = ["E", "W", "F", "D", "N", "B"]
+
+[tool.ruff.lint.pydocstyle]
+# Force le style Google pour les docstrings (avec les sections Args et Returns)
+convention = "google"

@@ -9,10 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-from src.utils.common_functions import (
-    filter_operational_stations,
-    create_hover_text
-)
+from src.utils.common_functions import filter_operational_stations
 from config import DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM
 
 
@@ -66,7 +63,9 @@ def create_map_layout(df: pd.DataFrame) -> html.Div:
                         dcc.RadioItems(
                             id='color-by-radio',
                             options=[
+                                {'label': 'Taux d\'occupation', 'value': 'occupancy'}, 
                                 {'label': 'Disponibilité', 'value': 'availability'},
+                                {'label': 'Places libres', 'value': 'docks'},
                                 {'label': 'Type de vélos', 'value': 'bike_type'}
                             ],
                             value='availability',
@@ -142,14 +141,37 @@ def update_map(
     size_map = {'small': 8, 'medium': 12, 'large': 16}
     marker_size_value = size_map.get(marker_size, 12)
 
-    # Create hover text
-    df_filtered['hover_text'] = df_filtered.apply(create_hover_text, axis=1)
+    # Calculate occupancy rate safely (avoid division by zero)
+    df_filtered = df_filtered.copy()
+    df_filtered['occupancy_pct'] = df_filtered.apply(
+        lambda row: (row['num_bikes_available'] / row['capacity'] * 100) 
+                   if row['capacity'] > 0 else 0,
+        axis=1
+    )
+
+    # Create hover text (FRANÇAIS uniquement)
+    df_filtered['hover_text'] = (
+        '<b>' + df_filtered['name'] + '</b><br>' +
+        'Vélos disponibles: ' + df_filtered['num_bikes_available'].astype(int).astype(str) + '<br>' +
+        'Mécaniques: ' + df_filtered['mechanical_bikes'].astype(int).astype(str) + '<br>' +
+        'Électriques: ' + df_filtered['ebikes'].astype(int).astype(str) + '<br>' +
+        'Capacité: ' + df_filtered['capacity'].astype(int).astype(str) + '<br>' +
+        'Taux d\'occupation: ' + df_filtered['occupancy_pct'].round(1).astype(str) + '%'
+    )
 
     # Determine color column
-    if color_by == 'availability':
+    if color_by == 'occupancy':
+        color_column = 'occupancy_pct'
+        color_scale = 'RdYlGn'
+        color_label = 'Taux d\'occupation'
+    elif color_by == 'availability':
         color_column = 'num_bikes_available'
         color_scale = 'RdYlGn'
         color_label = 'Vélos disponibles'
+    elif color_by == 'docks':
+        color_column = 'num_docks_available'
+        color_scale = 'RdYlGn'
+        color_label = 'Places libres'
     else:
         color_column = 'ebike_percentage'
         color_scale = 'Viridis'
@@ -162,22 +184,18 @@ def update_map(
         lon='lon',
         color=color_column,
         size='capacity',
-        hover_name='name',
-        hover_data={
-            'lat': False,
-            'lon': False,
-            'num_bikes_available': True,
-            'mechanical_bikes': True,
-            'ebikes': True,
-            'capacity': True,
-            color_column: False
-        },
+        custom_data=['hover_text'],
         color_continuous_scale=color_scale,
         size_max=marker_size_value,
         zoom=DEFAULT_MAP_ZOOM,
         center={'lat': DEFAULT_MAP_CENTER[0], 'lon': DEFAULT_MAP_CENTER[1]},
         mapbox_style='open-street-map',
         title=f'Carte des Stations Vélib\' - {len(df_filtered)} stations affichées'
+    )
+
+    # Utiliser SEULEMENT le hover_text personnalisé (pas de doublon)
+    fig.update_traces(
+        hovertemplate='%{customdata[0]}<extra></extra>'
     )
 
     fig.update_layout(
@@ -199,4 +217,4 @@ def update_map(
 
 if __name__ == "__main__":
     print("Map page layout created successfully")
-
+    

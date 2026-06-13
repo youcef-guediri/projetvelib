@@ -72,7 +72,8 @@ from src.components.navbar import create_navbar
 from src.pages.home import create_home_layout
 from src.pages.analysis import create_analysis_layout
 from src.pages.map_page import create_map_layout
-from src.pages.insights import create_insights_layout
+from src.pages.insights import create_maintenance_layout
+from src.pages.insights_callbacks import register_insights_callbacks
 from src.pages.about import create_about_layout
 
 # Configure logging
@@ -181,11 +182,14 @@ def create_app():
         elif pathname == '/map':
             return create_map_layout(df)
         elif pathname == '/insights':
-            return create_insights_layout(df)
+            return create_maintenance_layout(df)
         elif pathname == '/about':
             return create_about_layout()
         else:  # Default to home page
             return create_home_layout(df)
+    
+    # Register insights page callbacks for filter functionality
+    register_insights_callbacks(app, df)
     
     return app
 

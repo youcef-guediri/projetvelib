@@ -366,28 +366,9 @@ def create_home_layout(df: pd.DataFrame) -> html.Div:
                                 )
                             ], xs=12, className="mb-4")
                         ]),
-                        dbc.Row([
-                            dbc.Col([
-                                create_chart_card(
-                                    "Distribution",
-                                    create_availability_histogram(df_operational),
-                                    "Nombre de velos par station"
-                                )
-                            ], xs=12, className="mb-4")
-                        ])
-                    ], xs=12, lg=6),
-
-                    # Right column - 1 larger chart
-                    dbc.Col([
-                        create_chart_card(
-                            "Stations a Forte Capacite",
-                            create_capacity_chart(df_operational),
-                            "Top 8 des plus grandes stations"
-                        )
-                    ], xs=12, lg=6, className="mb-4"),
-                ])
-            ], style={'marginBottom': '40px'}),
-
+                    ]),
+                ]),
+            ]),
             # Insights Section
             html.Div([
                 create_section_header(
